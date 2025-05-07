@@ -562,6 +562,10 @@
     display: table;
   }
 
+  .h-auto {
+    height: auto;
+  }
+
   .h-screen {
     height: 100vh;
   }
@@ -616,6 +620,10 @@
 
   .justify-center {
     justify-content: center;
+  }
+
+  .justify-end {
+    justify-content: flex-end;
   }
 
   .gap-4 {
