@@ -15,8 +15,15 @@ export const loginUser = async (username: string, password: string) => {
 };
 
 export const fetchPosts = async () => {
-  const response = await api.get("/posts/feed");
-  return response.data;
+  try {
+    console.log("Chamando o endpoint:", `${process.env.NEXT_PUBLIC_API_URL}/posts`);
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+    console.log("Resposta recebida:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar posts:", error);
+    throw error;
+  }
 };
 
 export const createPost = async (post: { title: string; content: string }) => {

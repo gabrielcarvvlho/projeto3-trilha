@@ -33,8 +33,15 @@ const loginUser = async (username, password)=>{
     return response.data;
 };
 const fetchPosts = async ()=>{
-    const response = await api.get("/posts/feed");
-    return response.data;
+    try {
+        console.log("Chamando o endpoint:", `${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`);
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`);
+        console.log("Resposta recebida:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar posts:", error);
+        throw error;
+    }
 };
 const createPost = async (post)=>{
     const response = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`, post);
@@ -55,28 +62,35 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/api.ts [app-client] (ecmascript)"); // Certifique-se de que o serviço `createPost` está implementado
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/api.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
+;
 function HomePage() {
     _s();
     const [posts, setPosts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [newPostTitle, setNewPostTitle] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(""); // Estado para o título do novo post
-    const [newPostContent, setNewPostContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(""); // Estado para o conteúdo do novo post
+    const [newPostTitle, setNewPostTitle] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [newPostContent, setNewPostContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "HomePage.useEffect": ()=>{
+            const token = localStorage.getItem("authToken");
+            if (!token) {
+                router.push("/"); // Redireciona para login se não estiver logado
+                return;
+            }
             const loadPosts = {
                 "HomePage.useEffect.loadPosts": async ()=>{
                     try {
                         const data = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchPosts"])();
                         setPosts(data);
                     } catch (err) {
-                        console.error("Erro ao carregar posts:", err);
                         setError("Erro ao carregar os posts.");
                     } finally{
                         setLoading(false);
@@ -85,7 +99,9 @@ function HomePage() {
             }["HomePage.useEffect.loadPosts"];
             loadPosts();
         }
-    }["HomePage.useEffect"], []);
+    }["HomePage.useEffect"], [
+        router
+    ]);
     const handleCreatePost = async ()=>{
         if (!newPostTitle || !newPostContent) {
             alert("Preencha o título e o conteúdo do post.");
@@ -99,27 +115,26 @@ function HomePage() {
             setPosts([
                 newPost,
                 ...posts
-            ]); // Adiciona o novo post ao início do feed
-            setNewPostTitle(""); // Limpa o campo de título
-            setNewPostContent(""); // Limpa o campo de conteúdo
+            ]);
+            setNewPostTitle("");
+            setNewPostContent("");
         } catch (err) {
-            console.error("Erro ao criar post:", err);
             setError("Erro ao criar o post.");
         }
     };
     if (loading) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white",
+            className: "min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                 children: "Carregando feed..."
             }, void 0, false, {
                 fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 55,
+                lineNumber: 61,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/home/page.tsx",
-            lineNumber: 54,
+            lineNumber: 60,
             columnNumber: 7
         }, this);
     }
@@ -130,12 +145,12 @@ function HomePage() {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 63,
+                lineNumber: 69,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/home/page.tsx",
-            lineNumber: 62,
+            lineNumber: 68,
             columnNumber: 7
         }, this);
     }
@@ -147,7 +162,7 @@ function HomePage() {
                 children: "Feed de Posts"
             }, void 0, false, {
                 fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 70,
+                lineNumber: 76,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -158,7 +173,7 @@ function HomePage() {
                         children: "Criar Novo Post"
                     }, void 0, false, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 74,
+                        lineNumber: 79,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -169,7 +184,7 @@ function HomePage() {
                         className: "w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
                     }, void 0, false, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 75,
+                        lineNumber: 80,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -179,7 +194,7 @@ function HomePage() {
                         className: "w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
                     }, void 0, false, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 82,
+                        lineNumber: 87,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -188,13 +203,13 @@ function HomePage() {
                         children: "Postar"
                     }, void 0, false, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 88,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 73,
+                lineNumber: 78,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -203,7 +218,7 @@ function HomePage() {
                     children: "Nenhum post encontrado."
                 }, void 0, false, {
                     fileName: "[project]/src/app/home/page.tsx",
-                    lineNumber: 99,
+                    lineNumber: 103,
                     columnNumber: 11
                 }, this) : posts.map((post)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md",
@@ -213,35 +228,39 @@ function HomePage() {
                                 children: post.title
                             }, void 0, false, {
                                 fileName: "[project]/src/app/home/page.tsx",
-                                lineNumber: 106,
+                                lineNumber: 110,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 children: post.content
                             }, void 0, false, {
                                 fileName: "[project]/src/app/home/page.tsx",
-                                lineNumber: 107,
+                                lineNumber: 111,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, post.id, true, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 102,
+                        lineNumber: 106,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 97,
+                lineNumber: 101,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/home/page.tsx",
-        lineNumber: 69,
+        lineNumber: 75,
         columnNumber: 5
     }, this);
 }
-_s(HomePage, "Gd33SuYD73o7/2xNbPMvPQAMiKc=");
+_s(HomePage, "eJkl4BwOVJVyt1BBr4UHfys/BpU=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
+    ];
+});
 _c = HomePage;
 var _c;
 __turbopack_context__.k.register(_c, "HomePage");

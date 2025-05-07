@@ -126,6 +126,7 @@ module.exports = mod;
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
+    "createPost": (()=>createPost),
     "default": (()=>__TURBOPACK__default__export__),
     "fetchPosts": (()=>fetchPosts),
     "loginUser": (()=>loginUser),
@@ -151,7 +152,18 @@ const loginUser = async (username, password)=>{
     return response.data;
 };
 const fetchPosts = async ()=>{
-    const response = await api.get("/posts/feed");
+    try {
+        console.log("Chamando o endpoint:", `${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`);
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`);
+        console.log("Resposta recebida:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao buscar posts:", error);
+        throw error;
+    }
+};
+const createPost = async (post)=>{
+    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`, post);
     return response.data;
 };
 const __TURBOPACK__default__export__ = api;
@@ -162,253 +174,186 @@ const __TURBOPACK__default__export__ = api;
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "default": (()=>Home)
+    "default": (()=>HomePage)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/api.ts [app-ssr] (ecmascript)"); // Certifique-se de que este fetch funciona
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/api.ts [app-ssr] (ecmascript)");
 "use client";
 ;
 ;
 ;
 ;
-;
-function Home() {
+function HomePage() {
     const [posts, setPosts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [newPost, setNewPost] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    const [userId, setUserId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [newPostTitle, setNewPostTitle] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [newPostContent, setNewPostContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
-    // Verifica se o usuário está autenticado
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        const storedId = localStorage.getItem("authToken");
-        if (!storedId) {
-            router.push("/"); // Volta para o login
-        } else {
-            setUserId(parseInt(storedId));
-            (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchPosts"])().then((data)=>setPosts(data)).catch((error)=>console.error("Erro ao carregar posts:", error));
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+            router.push("/"); // Redireciona para login se não estiver logado
+            return;
         }
+        const loadPosts = async ()=>{
+            try {
+                const data = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["fetchPosts"])();
+                setPosts(data);
+            } catch (err) {
+                setError("Erro ao carregar os posts.");
+            } finally{
+                setLoading(false);
+            }
+        };
+        loadPosts();
     }, [
         router
     ]);
     const handleCreatePost = async ()=>{
-        if (!userId) return;
-        const formData = new FormData();
-        formData.append("user_id", String(userId));
-        formData.append("content", newPost);
-        try {
-            const res = await fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts/`, {
-                method: "POST",
-                body: formData
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setPosts((prev)=>[
-                        data,
-                        ...prev
-                    ]);
-                setNewPost("");
-            } else {
-                console.error("Erro ao criar post.");
-            }
-        } catch (error) {
-            console.error("Erro ao enviar post:", error);
+        if (!newPostTitle || !newPostContent) {
+            alert("Preencha o título e o conteúdo do post.");
+            return;
         }
-    };
-    const handleLike = async (postId)=>{
         try {
-            // Exemplo: criar interação (deve ser implementado no backend)
-            await fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/interactions/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    post_id: postId,
-                    user_id: userId,
-                    type: "like"
-                })
+            const newPost = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["createPost"])({
+                title: newPostTitle,
+                content: newPostContent
             });
-            // Atualiza likes localmente
-            setPosts((prevPosts)=>prevPosts.map((post)=>post.id === postId ? {
-                        ...post,
-                        likes: post.likes + 1
-                    } : post));
+            setPosts([
+                newPost,
+                ...posts
+            ]);
+            setNewPostTitle("");
+            setNewPostContent("");
         } catch (err) {
-            console.error("Erro ao curtir:", err);
+            setError("Erro ao criar o post.");
         }
     };
+    if (loading) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                children: "Carregando feed..."
+            }, void 0, false, {
+                fileName: "[project]/src/app/home/page.tsx",
+                lineNumber: 61,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/src/app/home/page.tsx",
+            lineNumber: 60,
+            columnNumber: 7
+        }, this);
+    }
+    if (error) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "min-h-screen flex items-center justify-center bg-red-100 text-red-800",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                children: error
+            }, void 0, false, {
+                fileName: "[project]/src/app/home/page.tsx",
+                lineNumber: 69,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "[project]/src/app/home/page.tsx",
+            lineNumber: 68,
+            columnNumber: 7
+        }, this);
+    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "min-h-screen bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
+        className: "min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6",
         children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-                className: "bg-gray-300 dark:bg-gray-700 shadow-md p-4 flex items-center justify-between",
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                className: "text-3xl font-bold mb-6",
+                children: "Feed de Posts"
+            }, void 0, false, {
+                fileName: "[project]/src/app/home/page.tsx",
+                lineNumber: 76,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6",
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                        className: "text-xl font-bold",
-                        children: "Trilhagram"
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                        className: "text-xl font-semibold mb-4",
+                        children: "Criar Novo Post"
                     }, void 0, false, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 89,
+                        lineNumber: 79,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        type: "text",
+                        placeholder: "Título do post",
+                        value: newPostTitle,
+                        onChange: (e)=>setNewPostTitle(e.target.value),
+                        className: "w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/home/page.tsx",
+                        lineNumber: 80,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
+                        placeholder: "Conteúdo do post",
+                        value: newPostContent,
+                        onChange: (e)=>setNewPostContent(e.target.value),
+                        className: "w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/home/page.tsx",
+                        lineNumber: 87,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                        onClick: ()=>{
-                            localStorage.removeItem("authToken");
-                            router.push("/");
-                        },
-                        className: "bg-red-500 text-white px-4 py-2 rounded",
-                        children: "Sair"
+                        onClick: handleCreatePost,
+                        className: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700",
+                        children: "Postar"
                     }, void 0, false, {
                         fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 90,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 88,
+                lineNumber: 78,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
-                className: "p-4 sm:p-8",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "max-w-2xl mx-auto space-y-6",
-                    children: [
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "bg-gray-300 dark:bg-gray-700 p-4 rounded-lg shadow-md",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                                    className: "w-full p-2 border border-gray-400 dark:border-gray-600 rounded-lg",
-                                    placeholder: "Compartilhe algo...",
-                                    value: newPost,
-                                    onChange: (e)=>setNewPost(e.target.value)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/home/page.tsx",
-                                    lineNumber: 105,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    className: "mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700",
-                                    onClick: handleCreatePost,
-                                    children: "Postar"
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/home/page.tsx",
-                                    lineNumber: 111,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/app/home/page.tsx",
-                            lineNumber: 104,
-                            columnNumber: 11
-                        }, this),
-                        posts.map((post)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "bg-gray-300 dark:bg-gray-700 p-4 rounded-lg shadow-md",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex items-center gap-4",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                                src: "/default-avatar.png",
-                                                alt: "User Avatar",
-                                                width: 40,
-                                                height: 40,
-                                                className: "rounded-full"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/home/page.tsx",
-                                                lineNumber: 126,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                                    className: "font-bold",
-                                                    children: [
-                                                        "User ",
-                                                        post.user_id
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "[project]/src/app/home/page.tsx",
-                                                    lineNumber: 134,
-                                                    columnNumber: 19
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/home/page.tsx",
-                                                lineNumber: 133,
-                                                columnNumber: 17
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/home/page.tsx",
-                                        lineNumber: 125,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "mt-4",
-                                        children: post.content
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/home/page.tsx",
-                                        lineNumber: 137,
-                                        columnNumber: 15
-                                    }, this),
-                                    post.image_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        src: `${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}${post.image_url}`,
-                                        alt: "Imagem do post",
-                                        width: 500,
-                                        height: 300,
-                                        className: "rounded-lg mt-4"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/home/page.tsx",
-                                        lineNumber: 139,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "mt-4 flex gap-4",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                className: "text-blue-600 hover:underline",
-                                                onClick: ()=>handleLike(post.id),
-                                                children: [
-                                                    "Like (",
-                                                    post.likes,
-                                                    ")"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/home/page.tsx",
-                                                lineNumber: 148,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                className: "text-red-600 hover:underline",
-                                                children: [
-                                                    "Dislike (",
-                                                    post.dislikes,
-                                                    ")"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/home/page.tsx",
-                                                lineNumber: 154,
-                                                columnNumber: 17
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/home/page.tsx",
-                                        lineNumber: 147,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, post.id, true, {
-                                fileName: "[project]/src/app/home/page.tsx",
-                                lineNumber: 121,
-                                columnNumber: 13
-                            }, this))
-                    ]
-                }, void 0, true, {
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "grid gap-4",
+                children: posts.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    children: "Nenhum post encontrado."
+                }, void 0, false, {
                     fileName: "[project]/src/app/home/page.tsx",
-                    lineNumber: 102,
-                    columnNumber: 9
-                }, this)
+                    lineNumber: 103,
+                    columnNumber: 11
+                }, this) : posts.map((post)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                                className: "text-xl font-semibold mb-2",
+                                children: post.title
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/home/page.tsx",
+                                lineNumber: 110,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                children: post.content
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/home/page.tsx",
+                                lineNumber: 111,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, post.id, true, {
+                        fileName: "[project]/src/app/home/page.tsx",
+                        lineNumber: 106,
+                        columnNumber: 13
+                    }, this))
             }, void 0, false, {
                 fileName: "[project]/src/app/home/page.tsx",
                 lineNumber: 101,
@@ -417,7 +362,7 @@ function Home() {
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/home/page.tsx",
-        lineNumber: 87,
+        lineNumber: 75,
         columnNumber: 5
     }, this);
 }
