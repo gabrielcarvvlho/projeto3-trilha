@@ -27,10 +27,10 @@ function Home() {
     const [posts, setPosts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [newPost, setNewPost] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts/feed`).then((response)=>response.json()).then((data)=>setPosts(data)).catch((error)=>console.error("Error fetching posts:", error));
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/feed`).then((response)=>response.json()).then((data)=>setPosts(data)).catch((error)=>console.error("Error fetching posts:", error));
     }, []);
     const handleCreatePost = ()=>{
-        fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -47,7 +47,7 @@ function Home() {
         }).catch((error)=>console.error("Error creating post:", error));
     };
     const handleLike = (postId)=>{
-        fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts/${postId}/like`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}/like`, {
             method: "POST"
         }).then(()=>{
             setPosts((prevPosts)=>prevPosts.map((post)=>post.id === postId ? {
@@ -156,7 +156,7 @@ function Home() {
                                         columnNumber: 15
                                     }, this),
                                     post.image_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        src: `${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}${post.image_url}`,
+                                        src: `${process.env.NEXT_PUBLIC_API_URL}${post.image_url}`,
                                         alt: "Post Image",
                                         width: 500,
                                         height: 300,

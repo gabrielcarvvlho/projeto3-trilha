@@ -23,7 +23,7 @@ function Home() {
     const [newPost, setNewPost] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Home.useEffect": ()=>{
-            fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts/feed`).then({
+            fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL}/posts/feed`).then({
                 "Home.useEffect": (response)=>response.json()
             }["Home.useEffect"]).then({
                 "Home.useEffect": (data)=>setPosts(data)
@@ -33,7 +33,7 @@ function Home() {
         }
     }["Home.useEffect"], []);
     const handleCreatePost = ()=>{
-        fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts`, {
+        fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL}/posts`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -50,7 +50,7 @@ function Home() {
         }).catch((error)=>console.error("Error creating post:", error));
     };
     const handleLike = (postId)=>{
-        fetch(`${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}/posts/${postId}/like`, {
+        fetch(`${__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL}/posts/${postId}/like`, {
             method: "POST"
         }).then(()=>{
             setPosts((prevPosts)=>prevPosts.map((post)=>post.id === postId ? {
@@ -159,7 +159,7 @@ function Home() {
                                         columnNumber: 15
                                     }, this),
                                     post.image_url && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                        src: `${("TURBOPACK compile-time value", "http://127.0.0.1:8000")}${post.image_url}`,
+                                        src: `${__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL}${post.image_url}`,
                                         alt: "Post Image",
                                         width: 500,
                                         height: 300,
