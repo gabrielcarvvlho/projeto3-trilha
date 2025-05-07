@@ -1,0 +1,40 @@
+# Ignorar dependências instaladas
+node_modules/
+
+# Ignorar arquivos de log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar arquivos de ambiente
+.env
+.env.local
+.env.*.local
+
+# Ignorar cache do npm e yarn
+.npm/
+.yarn/
+.pnp.*
+
+# Ignorar arquivos de build
+dist/
+build/
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos do editor
+.vscode/
+.idea/
+*.swp
+
+# Ignorar arquivos de teste de cobertura
+coverage/
+
+# Ignorar arquivos de lock do pacote
+package-lock.json
+yarn.lock
+
+# Ignorar arquivos grandes
+back and front.zip
