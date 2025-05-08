@@ -71,33 +71,7 @@ class PostUpdate(SQLModel):
 
 #---------------------------------------------------------------------------------------------
 
-# 3 classes vão ser relacionadas a Interaction:
-# InteractionType vai representar os tipos de interação que o usuário pode ter com o post
-class InterationType(str, enum.Enum):
-    like= "like"
-    dislike = "dislike"
-    love = "love"
-    funny = "hahaha"
-    hate = "🍅"
 
-# Interaction vai representar a tabela de interações no banco de dados
-'''
-O id da interação segue o mesmo padrão do id do usuário e do id do post, e nesse caso também começa em 1
-post_id é uma foreign key que vai referenciar o id do Post que foi interagido
-user_id é uma foreign key que vai referenciar o id do User que fez a interação
-type são os tipos de interação instanciados na classe InterationType
-'''
-class Interaction(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    post_id: int = Field(foreign_key="post.id")
-    user_id: int = Field(foreign_key="user.id")
-    type: InterationType
-
-# InteractionCreate vai ser usada para criar uma nova interação
-class InteractionCreate(SQLModel):
-    user_id: int
-    post_id: int
-    type: InterationType
 
 #---------------------------------------------------------------------------------------------
 

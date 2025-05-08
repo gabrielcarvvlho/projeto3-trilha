@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends, Body, Query  
-from sqlmodel import Session, select  
-from ..models import Post, PostCreate, Interaction
-from ..db import get_session  
+from fastapi import APIRouter, HTTPException, Depends, Body, Query
+from sqlmodel import Session, select
+from ..models import Post, PostCreate
+from ..db import get_session
 
-router = APIRouter(prefix="/posts")  
+router = APIRouter(prefix="/posts")
 
 @router.post("/")
 def create_post(post: PostCreate, session: Session = Depends(get_session)):
@@ -30,21 +30,21 @@ def get_post(post_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Post não encontrado.")
     return post
 
-@router.put("/{post_id}")  
-def update_post(  
-    post_id: int,  
-    post_data: PostCreate,  
-    user_id: int = Body(..., embed=True),  
-    session: Session = Depends(get_session)  
-):  
-    post = session.get(Post, post_id)  
-    if not post:  
-        raise HTTPException(status_code=404, detail="Post não encontrado.")  
-    if post.user_id != user_id:  
-        raise HTTPException(status_code=403, detail="Você só pode editar seus próprios posts.")  
-    post.content = post_data.content  
-    session.commit()  
-    session.refresh(post)  
+@router.put("/{post_id}")
+def update_post(
+    post_id: int,
+    post_data: PostCreate,
+    user_id: int = Body(..., embed=True),
+    session: Session = Depends(get_session)
+):
+    post = session.get(Post, post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post não encontrado.")
+    if post.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Você só pode editar seus próprios posts.")
+    post.content = post_data.content
+    session.commit()
+    session.refresh(post)
     return post
 
 @router.delete("/{post_id}")
@@ -61,58 +61,3 @@ def delete_post(
     session.delete(post)
     session.commit()
     return {"message": "Post deletado com sucesso."}
-
-@router.post("/{post_id}/react")
-def react_to_post(
-    post_id: int,
-    data: dict = Body(...),
-    session: Session = Depends(get_session)
-):
-    user_id = data.get("user_id")
-    reaction_type = data.get("type")  # Agora só aceita 'like' ou 'dislike'
-    
-    if reaction_type not in ["like", "dislike"]:
-        raise HTTPException(status_code=400, detail="Tipo de reação inválido. Use 'like' ou 'dislike'.")
-    
-    # Verifica se já existe uma reação deste usuário
-    existing = session.exec(
-        select(Interaction)
-        .where(Interaction.user_id == user_id)
-        .where(Interaction.post_id == post_id)
-    ).first()
-    
-    if existing:
-        if existing.type == reaction_type:
-            # Remove se for a mesma reação
-            session.delete(existing)
-        else:
-            # Atualiza se for diferente
-            existing.type = reaction_type
-    else:
-        # Cria nova interação
-        new_interaction = Interaction(
-            user_id=user_id,
-            post_id=post_id,
-            type=reaction_type
-        )
-        session.add(new_interaction)
-    
-    session.commit()
-    
-    # Retorna apenas contagens de like e dislike
-    likes = session.exec(
-        select(Interaction)
-        .where(Interaction.post_id == post_id)
-        .where(Interaction.type == "like")
-    ).count()
-    
-    dislikes = session.exec(
-        select(Interaction)
-        .where(Interaction.post_id == post_id)
-        .where(Interaction.type == "dislike")
-    ).count()
-    
-    return {
-        "likes": likes,
-        "dislikes": dislikes
-    }
