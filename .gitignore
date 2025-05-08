@@ -37,4 +37,6 @@ package-lock.json
 yarn.lock
 
 # Ignorar arquivos grandes
-back and front.zip
+back and front.zip.next
+
+front/.next/
