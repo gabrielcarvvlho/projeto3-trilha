@@ -2,136 +2,124 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getPosts, createPost, handleReaction } from "../../services/api";
+
+type Post = {
+  id: number;
+  content: string;
+  user_id: number;
+  likes: number;
+  dislikes: number;
+};
 
 export default function HomePage() {
   const router = useRouter();
-  const [posts, setPosts] = useState<
-    { image: string | null; comment: string; likes: number; dislikes: number }[]
-  >([]);
-  const [image, setImage] = useState<File | null>(null);
-  const [comment, setComment] = useState("");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<{id: number} | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      router.replace("/"); // Se não estiver logado, volta pro login
+    const userData = localStorage.getItem("currentUser");
+    if (!userData) {
+      router.replace("/");
+    } else {
+      setCurrentUser(JSON.parse(userData));
+      loadPosts();
     }
   }, [router]);
 
+  const loadPosts = async () => {
+    try {
+      setLoading(true);
+      const data = await getPosts();
+      setPosts(data);
+    } catch (error) {
+      console.error("Error loading posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitPost = async () => {
+    if (!content.trim() || !currentUser) return;
+    
+    try {
+      await createPost(content, currentUser.id);
+      setContent("");
+      await loadPosts();
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
+  };
+
+  const handleReaction = async (postId: number, type: 'like' | 'dislike') => {
+    if (!currentUser) return;
+
+    try {
+      await handleReaction(postId, currentUser.id, type); 
+      await loadPosts();
+    } catch (error) {
+      console.error("Error reacting to post:", error);
+    }
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentUser");
     router.replace("/");
   };
 
-  const handlePost = () => {
-    if (!image && !comment) {
-      alert("Por favor, adicione uma imagem ou um comentário.");
-      return;
-    }
-
-    const reader = new FileReader();
-    if (image) {
-      reader.onload = () => {
-        const newPost = {
-          image: reader.result as string,
-          comment,
-          likes: 0,
-          dislikes: 0,
-        };
-        setPosts([newPost, ...posts]); // Adiciona o novo post ao início do feed
-        setImage(null); // Limpa o campo de imagem
-        setComment(""); // Limpa o campo de comentário
-      };
-      reader.readAsDataURL(image);
-    } else {
-      const newPost = {
-        image: null,
-        comment,
-        likes: 0,
-        dislikes: 0,
-      };
-      setPosts([newPost, ...posts]); // Adiciona o novo post ao início do feed
-      setComment(""); // Limpa o campo de comentário
-    }
-  };
-
-  const handleLike = (index: number) => {
-    const updatedPosts = [...posts];
-    updatedPosts[index].likes += 1;
-    setPosts(updatedPosts);
-  };
-
-  const handleDislike = (index: number) => {
-    const updatedPosts = [...posts];
-    updatedPosts[index].dislikes += 1;
-    setPosts(updatedPosts);
-  };
+  if (loading) {
+    return <div className="text-center p-4">Carregando posts...</div>;
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white p-6">
-      {/* Botão de logout no canto superior direito */}
-      <div className="w-full flex justify-end mb-6">
-        <button
+    <div className="min-h-screen p-4 max-w-2xl mx-auto">
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Feed</h1>
+        <button 
           onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          className="bg-red-500 text-white px-4 py-2 rounded"
         >
           Sair
         </button>
-      </div>
+      </header>
 
-      {/* Formulário para adicionar foto e comentário */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md w-full max-w-md mb-6">
-        <h2 className="text-xl font-semibold mb-4">Adicionar Foto ou Comentário</h2>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-          className="w-full mb-4"
-        />
+      <div className="mb-6">
         <textarea
-          placeholder="Adicione um comentário..."
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="O que você está pensando?"
+          className="w-full p-2 border rounded mb-2"
         />
         <button
-          onClick={handlePost}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          onClick={handleSubmitPost}
+          disabled={!content.trim()}
+          className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
         >
           Postar
         </button>
       </div>
 
-      {/* Feed de posts */}
-      <div className="w-full max-w-md">
+      <div className="space-y-4">
         {posts.length === 0 ? (
-          <p className="text-center">Nenhum post ainda. Adicione uma foto ou comentário!</p>
+          <p className="text-center">Nenhum post ainda. Seja o primeiro!</p>
         ) : (
-          posts.map((post, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4"
-            >
-              {post.image && (
-                <img
-                  src={post.image}
-                  alt="Post"
-                  className="w-full h-auto rounded-lg mb-4"
-                />
-              )}
-              {post.comment && <p>{post.comment}</p>}
-              <div className="flex items-center justify-between mt-4">
+          posts.map((post) => (
+            <div key={post.id} className="p-4 border rounded shadow">
+              <p className="mb-2">{post.content}</p>
+              <div className="flex space-x-4">
                 <button
-                  onClick={() => handleLike(index)}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                  onClick={() => handleReaction(post.id, 'like')}
+                  className="bg-green-100 text-green-800 px-3 py-1 rounded"
                 >
-                  Like ({post.likes})
+                  👍 {post.likes}
                 </button>
                 <button
-                  onClick={() => handleDislike(index)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                  onClick={() => handleReaction(post.id, 'dislike')}
+                  className="bg-red-100 text-red-800 px-3 py-1 rounded"
                 >
-                  Dislike ({post.dislikes})
+                  👎 {post.dislikes}
                 </button>
               </div>
             </div>

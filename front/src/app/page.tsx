@@ -1,123 +1,114 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser, registerUser } from "../services/api";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const [form, setForm] = useState({
+    username: "",
+    password: ""
+  });
+  const [message, setMessage] = useState({ text: "", isError: false });
   const [showRegister, setShowRegister] = useState(false);
-  const [isCheckingToken, setIsCheckingToken] = useState(true); // Garante que não redirecione cedo
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Verifica token somente depois de montar
-  useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
-    if (token) {
-      router.replace("/home");
-    } else {
-      setIsCheckingToken(false); // Só exibe a tela depois dessa verificação
-    }
-  }, [router]);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const handleLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage({ text: "", isError: false });
+
     try {
-      const data = await loginUser(username, password);
-      if (data.token) {
-        localStorage.setItem("authToken", data.token);
-        router.replace("/home");
+      if (showRegister) {
+        const result = await registerUser(form.username, form.password);
+        if (result.success) {
+          setMessage({ text: result.message, isError: false });
+          setShowRegister(false);
+          setForm({ username: "", password: "" });
+        } else {
+          setMessage({ text: result.message, isError: true });
+        }
       } else {
-        setMessage("Token inválido.");
+        const result = await loginUser(form.username, form.password);
+        if (result.success) {
+          localStorage.setItem("currentUser", JSON.stringify({
+            id: result.user_id,
+            username: form.username
+          }));
+          router.push("/home");
+        } else {
+          setMessage({ text: result.message, isError: true });
+        }
       }
-    } catch {
-      setMessage("Erro ao fazer login.");
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const handleRegister = async () => {
-    try {
-      const data = await registerUser(username, password);
-      setMessage(`Usuário ${data.username} registrado com sucesso!`);
-      setShowRegister(false);
-    } catch {
-      setMessage("Erro ao registrar.");
-    }
-  };
-
-  if (isCheckingToken) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-gray-100">
-        <p>Carregando...</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Login</h1>
-        <input
-          type="text"
-          placeholder="Usuário"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-        />
-        <div className="flex justify-between mb-4">
-          <button onClick={handleLogin} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            Entrar
-          </button>
-          <button onClick={() => setShowRegister(true)} className="text-blue-500 hover:underline">
-            Registrar
-          </button>
-        </div>
-        {message && <p className="text-center text-sm">{message}</p>}
-      </div>
-
-      {showRegister && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Registrar Usuário</h2>
-            <input
-              type="text"
-              placeholder="Usuário"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
-            />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 mb-4 border border-gray-400 dark:border-gray-600 rounded-lg"
-            />
-            <div className="flex justify-between">
-              <button
-                onClick={handleRegister}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
-                Registrar
-              </button>
-              <button
-                onClick={() => setShowRegister(false)}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-              >
-                Cancelar
-              </button>
-            </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-4 text-white">
+          {showRegister ? "Registrar" : "Login"}
+        </h1>
+        
+        {message.text && (
+          <div className={`mb-4 p-2 rounded text-center ${
+            message.isError ? "bg-red-700 text-red-200" : "bg-green-700 text-green-200"
+          }`}>
+            {message.text}
           </div>
-        </div>
-      )}
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="username"
+            placeholder="Usuário"
+            value={form.username}
+            onChange={handleChange}
+            className="w-full p-2 mb-4 border rounded bg-gray-700 text-white placeholder-gray-400"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Senha"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full p-2 mb-4 border rounded bg-gray-700 text-white placeholder-gray-400"
+            required
+          />
+          
+          <div className="flex justify-between">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-500"
+            >
+              {isLoading ? "Processando..." : showRegister ? "Registrar" : "Entrar"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowRegister(!showRegister);
+                setMessage({ text: "", isError: false });
+              }}
+              className="text-gray-300 hover:underline"
+            >
+              {showRegister ? "Já tem conta? Login" : "Criar nova conta"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,228 +1,253 @@
 (globalThis.TURBOPACK = globalThis.TURBOPACK || []).push([typeof document === "object" ? document.currentScript : undefined, {
 
-"[project]/src/app/home/page.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
+"[project]/src/services/api.ts [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
+{
+// src/app/services/api.ts
+__turbopack_context__.s({
+    "createPost": (()=>createPost),
+    "getPosts": (()=>getPosts),
+    "handleReaction": (()=>handleReaction)
+});
+const API_URL = 'http://localhost:8000'; // Ajuste para a URL da sua API
+const getPosts = async ()=>{
+    const response = await fetch(`${API_URL}/posts`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+    }
+    return response.json();
+};
+const createPost = async (content, userId)=>{
+    const response = await fetch(`${API_URL}/posts`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            content,
+            user_id: userId
+        })
+    });
+    if (!response.ok) {
+        throw new Error('Failed to create post');
+    }
+    return response.json();
+};
+const handleReaction = async (postId, userId, type)=>{
+    const response = await fetch(`${API_URL}/posts/${postId}/react`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            type
+        })
+    });
+    if (!response.ok) {
+        throw new Error('Failed to add reaction');
+    }
+    return response.json();
+};
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
+}
+}}),
+"[project]/src/app/page.tsx [app-client] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
 __turbopack_context__.s({
-    "default": (()=>HomePage)
+    "default": (()=>LoginPage)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
-(()=>{
-    const e = new Error("Cannot find module '../services/api'");
-    e.code = 'MODULE_NOT_FOUND';
-    throw e;
-})();
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/api.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
 ;
-function HomePage() {
+function LoginPage() {
     _s();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
-    const [posts, setPosts] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
-    const [content, setContent] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
-    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
-    const [currentUser, setCurrentUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "HomePage.useEffect": ()=>{
-            const userData = localStorage.getItem("currentUser");
-            if (!userData) {
-                router.replace("/");
+    const [form, setForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        username: "",
+        password: ""
+    });
+    const [message, setMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        text: "",
+        isError: false
+    });
+    const [showRegister, setShowRegister] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const handleChange = (e)=>{
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+    };
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        setIsLoading(true);
+        setMessage({
+            text: "",
+            isError: false
+        });
+        try {
+            if (showRegister) {
+                const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["registerUser"])(form.username, form.password);
+                if (result.success) {
+                    setMessage({
+                        text: result.message,
+                        isError: false
+                    });
+                    setShowRegister(false);
+                    setForm({
+                        username: "",
+                        password: ""
+                    });
+                } else {
+                    setMessage({
+                        text: result.message,
+                        isError: true
+                    });
+                }
             } else {
-                setCurrentUser(JSON.parse(userData));
-                loadPosts();
+                const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(form.username, form.password);
+                if (result.success) {
+                    localStorage.setItem("currentUser", JSON.stringify({
+                        id: result.user_id,
+                        username: form.username
+                    }));
+                    router.push("/home");
+                } else {
+                    setMessage({
+                        text: result.message,
+                        isError: true
+                    });
+                }
             }
-        }
-    }["HomePage.useEffect"], [
-        router
-    ]);
-    const loadPosts = async ()=>{
-        try {
-            setLoading(true);
-            const data = await getPosts();
-            setPosts(data);
-        } catch (error) {
-            console.error("Error loading posts:", error);
         } finally{
-            setLoading(false);
+            setIsLoading(false);
         }
     };
-    const handleSubmitPost = async ()=>{
-        if (!content.trim() || !currentUser) return;
-        try {
-            await createPost(content, currentUser.id);
-            setContent("");
-            await loadPosts();
-        } catch (error) {
-            console.error("Error creating post:", error);
-        }
-    };
-    const handleReaction = async (postId, type)=>{
-        if (!currentUser) return;
-        try {
-            await handleReaction(postId, currentUser.id, type);
-            await loadPosts();
-        } catch (error) {
-            console.error("Error reacting to post:", error);
-        }
-    };
-    const handleLogout = ()=>{
-        localStorage.removeItem("currentUser");
-        router.replace("/");
-    };
-    if (loading) {
-        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: "text-center p-4",
-            children: "Carregando posts..."
-        }, void 0, false, {
-            fileName: "[project]/src/app/home/page.tsx",
-            lineNumber: 73,
-            columnNumber: 12
-        }, this);
-    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "min-h-screen p-4 max-w-2xl mx-auto",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-                className: "flex justify-between items-center mb-6",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                        className: "text-2xl font-bold",
-                        children: "Feed"
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 79,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                        onClick: handleLogout,
-                        className: "bg-red-500 text-white px-4 py-2 rounded",
-                        children: "Sair"
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 80,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 78,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mb-6",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
-                        value: content,
-                        onChange: (e)=>setContent(e.target.value),
-                        placeholder: "O que você está pensando?",
-                        className: "w-full p-2 border rounded mb-2"
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 89,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                        onClick: handleSubmitPost,
-                        disabled: !content.trim(),
-                        className: "bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300",
-                        children: "Postar"
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 95,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 88,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "space-y-4",
-                children: posts.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                    className: "text-center",
-                    children: "Nenhum post ainda. Seja o primeiro!"
+        className: "min-h-screen flex items-center justify-center bg-gray-900",
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                    className: "text-2xl font-bold mb-4 text-white",
+                    children: showRegister ? "Registrar" : "Login"
                 }, void 0, false, {
-                    fileName: "[project]/src/app/home/page.tsx",
-                    lineNumber: 106,
+                    fileName: "[project]/src/app/page.tsx",
+                    lineNumber: 59,
+                    columnNumber: 9
+                }, this),
+                message.text && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: `mb-4 p-2 rounded text-center ${message.isError ? "bg-red-700 text-red-200" : "bg-green-700 text-green-200"}`,
+                    children: message.text
+                }, void 0, false, {
+                    fileName: "[project]/src/app/page.tsx",
+                    lineNumber: 64,
                     columnNumber: 11
-                }, this) : posts.map((post)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "p-4 border rounded shadow",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: "mb-2",
-                                children: post.content
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/home/page.tsx",
-                                lineNumber: 110,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "flex space-x-4",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: ()=>handleReaction(post.id, 'like'),
-                                        className: "bg-green-100 text-green-800 px-3 py-1 rounded",
-                                        children: [
-                                            "👍 ",
-                                            post.likes
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/home/page.tsx",
-                                        lineNumber: 112,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: ()=>handleReaction(post.id, 'dislike'),
-                                        className: "bg-red-100 text-red-800 px-3 py-1 rounded",
-                                        children: [
-                                            "👎 ",
-                                            post.dislikes
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/home/page.tsx",
-                                        lineNumber: 118,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/home/page.tsx",
-                                lineNumber: 111,
-                                columnNumber: 15
-                            }, this)
-                        ]
-                    }, post.id, true, {
-                        fileName: "[project]/src/app/home/page.tsx",
-                        lineNumber: 109,
-                        columnNumber: 13
-                    }, this))
-            }, void 0, false, {
-                fileName: "[project]/src/app/home/page.tsx",
-                lineNumber: 104,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "[project]/src/app/home/page.tsx",
-        lineNumber: 77,
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                    onSubmit: handleSubmit,
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                            type: "text",
+                            name: "username",
+                            placeholder: "Usuário",
+                            value: form.username,
+                            onChange: handleChange,
+                            className: "w-full p-2 mb-4 border rounded bg-gray-700 text-white placeholder-gray-400",
+                            required: true
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/page.tsx",
+                            lineNumber: 72,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                            type: "password",
+                            name: "password",
+                            placeholder: "Senha",
+                            value: form.password,
+                            onChange: handleChange,
+                            className: "w-full p-2 mb-4 border rounded bg-gray-700 text-white placeholder-gray-400",
+                            required: true
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/page.tsx",
+                            lineNumber: 81,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex justify-between",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "submit",
+                                    disabled: isLoading,
+                                    className: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-gray-500",
+                                    children: isLoading ? "Processando..." : showRegister ? "Registrar" : "Entrar"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/page.tsx",
+                                    lineNumber: 92,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "button",
+                                    onClick: ()=>{
+                                        setShowRegister(!showRegister);
+                                        setMessage({
+                                            text: "",
+                                            isError: false
+                                        });
+                                    },
+                                    className: "text-gray-300 hover:underline",
+                                    children: showRegister ? "Já tem conta? Login" : "Criar nova conta"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/page.tsx",
+                                    lineNumber: 99,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/page.tsx",
+                            lineNumber: 91,
+                            columnNumber: 11
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/page.tsx",
+                    lineNumber: 71,
+                    columnNumber: 9
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/app/page.tsx",
+            lineNumber: 58,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/src/app/page.tsx",
+        lineNumber: 57,
         columnNumber: 5
     }, this);
 }
-_s(HomePage, "xr6bnuieOu1bV8P1WQU3Cruu1E0=", false, function() {
+_s(LoginPage, "AiD4LwoAmfHaQ09sBlhFmoNT8Jc=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
 });
-_c = HomePage;
+_c = LoginPage;
 var _c;
-__turbopack_context__.k.register(_c, "HomePage");
+__turbopack_context__.k.register(_c, "LoginPage");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
@@ -455,4 +480,4 @@ module.exports = __turbopack_context__.r("[project]/node_modules/next/dist/clien
 }}),
 }]);
 
-//# sourceMappingURL=_c5654c58._.js.map
+//# sourceMappingURL=_538dc49d._.js.map
