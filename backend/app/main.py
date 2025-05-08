@@ -43,7 +43,7 @@ facilidade o frontend com caminhos
 
 app.include_router(users.router)
 app.include_router(posts.router)
-app.include_router(interactions.router)
+
 
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads") # adição da opção de carregar imagens
