@@ -3,7 +3,7 @@ from .models import SQLModel
 from .db import engine  
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from .routers import users, posts, interactions 
+from .routers import users, posts
 from fastapi.staticfiles import StaticFiles
 
 '''
@@ -43,7 +43,9 @@ facilidade o frontend com caminhos
 
 app.include_router(users.router)
 app.include_router(posts.router)
+<<<<<<< HEAD
 
+=======
 
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads") # adição da opção de carregar imagens
