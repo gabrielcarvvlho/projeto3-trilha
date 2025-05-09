@@ -3,7 +3,7 @@ from .models import SQLModel
 from .db import engine  
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from .routers import users, posts
+from .routers import users, posts, likes
 from fastapi.staticfiles import StaticFiles
 
 '''
@@ -43,6 +43,7 @@ facilidade o frontend com caminhos
 
 app.include_router(users.router)
 app.include_router(posts.router)
+app.include_router(likes.router)
 
 
 

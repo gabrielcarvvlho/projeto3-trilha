@@ -1,8 +1,8 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime 
+from sqlalchemy import UniqueConstraint
 import enum
-
 # 3 classes vão ser relacionadas a User:
 # USER vai representar a tabela no de usuários no banco de dados
 '''
@@ -47,16 +47,16 @@ updated_at é a data de atualização do post, que vai ser preenchida automatica
 class Post(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     content: str 
-    image_url: Optional[str] = None
-    video_url: Optional[str] = None
+#   image_url: Optional[str] = None
+#    video_url: Optional[str] = None
     user_id: int = Field(foreign_key="user.id")
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = None
 
 # PostCreate vai ser usada para criar um novo post
 class PostCreate(SQLModel):  
-    image_url: Optional[str] = None
-    video_url: Optional[str] = None
+    #image_url: Optional[str] = None
+    #video_url: Optional[str] = None
     content: str  
     user_id: int
 
@@ -75,15 +75,32 @@ class PostUpdate(SQLModel):
 
 #---------------------------------------------------------------------------------------------
 
-# PostWithCounts vai representar a tabela de posts com as contagens de interações
-class PostWithCounts(SQLModel):
-    id: int
-    content: str
-    user_id: int
-    image_url: Optional[str] = None
-    video_url: Optional[str] = None
-    likes: int
-    loves: int
-    dislikes: int
-    funny: int
-    hates: int
+
+
+class LikeType(str, enum.Enum):  
+    LIKE = "like"  
+    DISLIKE = "dislike"  
+
+class Like(SQLModel, table=True):  
+    id: Optional[int] = Field(default=None, primary_key=True)  
+    user_id: int = Field(foreign_key="user.id")  
+    post_id: int = Field(foreign_key="post.id")  
+    type: LikeType  
+    created_at: datetime = Field(default_factory=datetime.utcnow)  
+
+    # Garante que um usuário só pode ter uma interação por post  
+    __table_args__ = (  
+        UniqueConstraint('user_id', 'post_id', name='unique_user_post_like'),  
+    )  
+
+class LikeCreate(SQLModel):  
+    post_id: int  
+    type: LikeType  
+
+class PostWithLikes(SQLModel):  
+    id: int  
+    content: str  
+    user_id: int  
+    likes_count: int = 0  
+    dislikes_count: int = 0  
+    user_like_type: Optional[LikeType] = None
