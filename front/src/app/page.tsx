@@ -21,37 +21,42 @@ export default function LoginPage() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setMessage({ text: "", isError: false });
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setMessage({ text: "", isError: false });
 
-    try {
-      if (showRegister) {
-        const result = await registerUser(form.username, form.password);
-        if (result.success) {
-          setMessage({ text: result.message, isError: false });
-          setShowRegister(false);
-          setForm({ username: "", password: "" });
-        } else {
-          setMessage({ text: result.message, isError: true });
-        }
+  try {
+    if (showRegister) {
+      const result = await registerUser(form.username, form.password);
+      console.log("Register result:", result); // Debugging log
+      if (result.success) {
+        setMessage({ text: result.message, isError: false });
+        setShowRegister(false);
+        setForm({ username: "", password: "" });
       } else {
-        const result = await loginUser(form.username, form.password);
-        if (result.success) {
-          localStorage.setItem("currentUser", JSON.stringify({
-            id: result.user_id,
-            username: form.username
-          }));
-          router.push("/home");
-        } else {
-          setMessage({ text: result.message, isError: true });
-        }
+        setMessage({ text: result.message, isError: true });
       }
-    } finally {
-      setIsLoading(false);
+    } else {
+      const result = await loginUser(form.username, form.password);
+      console.log("Login result:", result); // Debugging log
+      if (result.success) {
+        localStorage.setItem("currentUser", JSON.stringify({
+          username: form.username,
+        }));
+        console.log("Redirecting to /home...");
+        router.push("/home");
+      } else {
+        setMessage({ text: result.message, isError: true });
+      }
     }
-  };
+  } catch (error) {
+    console.error("Error during login/register:", error);
+    setMessage({ text: "An unexpected error occurred. Please try again.", isError: true });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">

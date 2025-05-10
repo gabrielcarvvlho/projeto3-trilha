@@ -3,6 +3,8 @@ from typing import Optional
 from datetime import datetime 
 from sqlalchemy import UniqueConstraint
 import enum
+
+
 # 3 classes vão ser relacionadas a User:
 # USER vai representar a tabela no de usuários no banco de dados
 '''
@@ -60,22 +62,8 @@ class PostCreate(SQLModel):
     content: str  
     user_id: int
 
-# talvez isso rode a questao do updated_at, mas não tenho certeza
-'''
-class PostUpdate(SQLModel):
-    content: Optional[str] = None
-    image_url: Optional[str] = None
-    video_url: Optional[str] = None
-
-'''
 
 #---------------------------------------------------------------------------------------------
-
-
-
-#---------------------------------------------------------------------------------------------
-
-
 
 class LikeType(str, enum.Enum):  
     LIKE = "like"  
